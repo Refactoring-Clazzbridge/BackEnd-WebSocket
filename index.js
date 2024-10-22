@@ -3,9 +3,15 @@ const { createServer } = require('node:http');
 const { join } = require('node:path');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const { createClient } = require('redis'); // 최신 redis 모듈
+const { createClient } = require('redis');
+const {verify} = require("jsonwebtoken");
+const axios = require("axios");
+require("dotenv").config();
 
 // Express 서버 설정
+const redisHost = process.env.REDIS_HOST;
+const redisPort = process.env.REDIS_PORT;
+const redisUrl = process.env.REDIS_URL;
 const host = process.env.HOST || '127.0.0.1';
 const port = process.env.CHAT_PORT || 3001;
 const app = express();
@@ -17,7 +23,7 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3001'], // 허용할 프론트엔드의 URL
+    origin: ['http://localhost:3000'], // 허용할 프론트엔드의 URL
     methods: ['GET', 'POST'],
     credentials: true,  // 쿠키 전송을 허용할지 여부
   }
@@ -27,10 +33,37 @@ app.get('/chat', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
 
+const getUserName = async (id) => {
+  // 백엔드 서버에서 회원 정보를 가져오는 API
+  app.get(`/user/${id}`, (req, res) => {
+    res.json({ username: results[0].username });
+    // MySQL에서 회원 정보 조회
+    db.query('SELECT username FROM users WHERE id = ?', [userId], (error, results) => {
+      if (error) {
+        return res.status(500).send('Server error');
+      }
+      if (results.length > 0) {
+
+      } else {
+        res.status(404).send('User not found');
+      }
+    });
+  });
+}
+
+const get = () => {
+
+}
+
+// Axios 인스턴스 생성
+const apiClient = axios.create({
+  baseURL: "http://localhost:8080/api/", // 기본 URL 설정
+});
+
 // Redis 클라이언트 설정 (비동기 방식)
 async function initializeRedis() {
   const redisClient = createClient({
-    url: 'redis://redisc-po67e.vpc-cdb.ntruss.com:6379', // Redis URL을 명확하게 설정
+    url: redisUrl,
     legacyMode: true,
   });
 
@@ -53,7 +86,29 @@ async function startServer() {
       console.log('a user connected, id : ', socket.id);
 
       socket.on('connected', (token) => {
-        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        verify(token, 'c2V1bGtpYW5nIHN0cmluZyBmb3IgYmFzZTY0IGVuY29kaW5n', (err, user) => {
+
+          // 요청 인터셉터 설정: 모든 요청에 Authorization 헤더를 자동으로 추가
+          apiClient.interceptors.request.use(
+              (config) => {
+                if (token) {
+                  config.headers["Authorization"] = `Bearer ${token}`; // Authorization 헤더에 토큰 추가
+                }
+                return config; // 요청 계속 진행
+              },
+              (error) => {
+                return Promise.reject(error); // 요청 에러 처리
+              }
+          );
+
+          console.log(user, token);
+          apiClient.get(`/user/chat/${user.id}`)
+          .then(response => {
+            console.log(response.data); // 서버에서 가져온 데이터 확인
+          })
+          .catch(error => {
+            console.error('Error fetching user data:', error); // 오류 처리
+          });
           if (err) {
             console.error(err);
           }
