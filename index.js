@@ -4,7 +4,7 @@ const { join } = require('node:path');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const { createClient } = require('redis');
-const {verify} = require("jsonwebtoken");
+const { verify } = require("jsonwebtoken");
 const axios = require("axios");
 const requestWithAuthToken = require('./utils/apiClient');
 require("dotenv").config();
@@ -20,7 +20,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 let redisClient;
 
 app.use(cors({
-  origin: ['http://'+host+':'+port,'http://'+host+':'+3001],
+  origin: ['http://' + host + ':' + port, 'http://' + host + ':' + 3001],
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -28,7 +28,7 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000'], // 허용할 프론트엔드의 URL
+    origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com:3000'], // 허용할 프론트엔드의 URL
     methods: ['GET', 'POST'],
     credentials: true,  // 쿠키 전송을 허용할지 여부
   }
@@ -113,7 +113,7 @@ async function scanAllChats(cursor = '0', keys = []) {
       const filteredKeys = newKeys.filter(key => !key.includes(':messages'));
       keys.push(...filteredKeys);
 
-      if (newCursor === '0'){
+      if (newCursor === '0') {
         resolve(keys);
       } else {
         resolve(scanAllChats(newCursor, keys));
@@ -122,7 +122,7 @@ async function scanAllChats(cursor = '0', keys = []) {
   })
 }
 
-async function getUserInfoFromRedis(userId){
+async function getUserInfoFromRedis(userId) {
   const redisClient = await initializeRedis();
 
   return new Promise((resolve, reject) => {
@@ -145,7 +145,7 @@ async function getUserInfoFromMySql(socket, userId) {
 async function startServer() {
   redisClient = await initializeRedis();
   try {
-    io.on('connection',  (socket) => {
+    io.on('connection', (socket) => {
       console.log('a user connected, id : ', socket.id);
 
       socket.on('connected', (token) => {
@@ -153,7 +153,7 @@ async function startServer() {
         verify(token, JWT_SECRET, (err, user) => {
           if (err || !user || !user.id) {
             console.error("JWT 검증에 실패하였거나, 유저 정보가 존재하지 않습니다. : ",
-                err || "User data missing")
+              err || "User data missing")
             socket.emit('initError', 'Invalid token or user data missing');
             return;
           }
@@ -161,21 +161,21 @@ async function startServer() {
           socket.user = user;
 
           requestWithAuthToken(token, 'GET', `/user/chat/${user.id}`)
-          .then(response => {
-            console.log(response.data); // 서버에서 가져온 데이터 확인
-            socket.token = token;
-            socket.userName = response.data.name;
-            socket.avatarImageUrl = response.data.avatarImageUrl;
-            socket.userAccount = response.data.memberId;
+            .then(response => {
+              console.log(response.data); // 서버에서 가져온 데이터 확인
+              socket.token = token;
+              socket.userName = response.data.name;
+              socket.avatarImageUrl = response.data.avatarImageUrl;
+              socket.userAccount = response.data.memberId;
 
-            console.log('a user connected, name : ', socket.userName);
-            console.log('a user connected, id : ', socket.userAccount);
+              console.log('a user connected, name : ', socket.userName);
+              console.log('a user connected, id : ', socket.userAccount);
 
-            socket.emit('initCompleted');
-          })
-          .catch(error => {
-            console.error('Error fetching user data:', error); // 오류 처리
-          });
+              socket.emit('initCompleted');
+            })
+            .catch(error => {
+              console.error('Error fetching user data:', error); // 오류 처리
+            });
 
           if (err) {
             console.error(err);
@@ -200,7 +200,7 @@ async function startServer() {
       socket.on('chat message', (msg) => {
         console.log('message: ' + msg);
         // Redis에 메시지 저장
-        redisClient.rPush('messages', JSON.stringify({user: "test", msg}));
+        redisClient.rPush('messages', JSON.stringify({ user: "test", msg }));
         io.emit('chat message', msg);
       });
     });
