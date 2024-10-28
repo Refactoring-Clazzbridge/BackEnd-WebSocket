@@ -5,7 +5,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 80          # 서비스의 외부 포트
+    - port: 3001          # 서비스의 외부 포트
       targetPort: 3001    # 컨테이너의 포트
   selector:
     app: websocket     # Deployment에서 설정한 라벨과 일치해야 함
