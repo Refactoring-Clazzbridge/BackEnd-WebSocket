@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // Axios 인스턴스 생성
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api/", // 기본 URL 설정
+  baseURL: "http://default-back-service-e27ef-100126159-b0eb9aec7a73.kr.lb.naverncp.com:8080/api/", // 기본 URL 설정
 });
 
 // 함수로 API 호출 정의
