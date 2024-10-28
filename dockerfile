@@ -5,7 +5,6 @@ WORKDIR /BACKEND-WEBSOCKET
 COPY package.json package-lock.json ./
 RUN npm install
 COPY ./ ./
-RUN npm run build
 
 # 2단계: Node 서버 설정
 FROM node:20
