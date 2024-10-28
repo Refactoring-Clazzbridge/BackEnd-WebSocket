@@ -1,5 +1,5 @@
 # 1단계: 빌드
-FROM node:20 AS build
+FROM node:20
 
 WORKDIR /BACKEND-WEBSOCKET
 COPY package.json package-lock.json ./
