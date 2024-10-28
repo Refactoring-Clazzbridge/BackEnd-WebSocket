@@ -1,8 +1,8 @@
-FROM node:20
+FROM node:18
 
 WORKDIR /BACKEND-WEBSOCKET
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 COPY ./ ./
 
 # 포트 노출
