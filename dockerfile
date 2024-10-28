@@ -1,8 +1,8 @@
-FROM node:18
+FROM node:20-alpine
 
 WORKDIR /BACKEND-WEBSOCKET
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 COPY ./ ./
 
 # 포트 노출
