@@ -39,7 +39,7 @@ async function getAllChatsFromUserId(redisClient, userId) {
           });
         })
 
-        //console.log(messages)
+        console.log(messages)
 
         chatData.id = chatKey;
         chatData.sender = {

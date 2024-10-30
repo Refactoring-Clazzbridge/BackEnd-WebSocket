@@ -159,7 +159,7 @@ async function startServer() {
           id: '1',
           sender: String(participants[1]),
           content: data.text,
-          timestamp: Date.now()
+          timestamp: new Date(Date.now())
         }));
 
         callback({ success: true, message: 'New chat created successfully', chatId: newChatId });
