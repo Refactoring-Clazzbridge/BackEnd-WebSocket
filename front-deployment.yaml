@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket
+  template:
+    metadata:
+      labels:
+        app: websocket
+    spec:
+      imagePullSecrets:
+      - name: regcred  # 생성한 Secret 이름
+      containers:
+      - name: react-container
+        image: contest78.kr.ncr.ntruss.com/websocket:latest
+        ports:
+        - containerPort: 3001

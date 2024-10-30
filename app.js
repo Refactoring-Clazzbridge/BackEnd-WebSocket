@@ -30,7 +30,7 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com'],
     methods: ['GET', 'POST'],
     credentials: true,
   }
@@ -63,7 +63,7 @@ async function startServer() {
 
       try {
         const setUserStatus = await setUserOnlineStatus(redisClient, socket.user.id,
-            true);
+          true);
         console.log("유저 온라인 상태 set true")
       } catch (e) {
         console.error(e);
@@ -112,7 +112,7 @@ async function startServer() {
 
     socket.on('newMessage', async (message) => {
       try {
-        const newMessageResult =  await newMessage(redisClient, socket.user.id, message);
+        const newMessageResult = await newMessage(redisClient, socket.user.id, message);
         console.log(newMessageResult);
         console.log("메시지 입력", message)
 
