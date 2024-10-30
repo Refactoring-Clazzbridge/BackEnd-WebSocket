@@ -30,7 +30,7 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com'],
+    origin: ['http://localhost:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   }
