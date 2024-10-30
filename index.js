@@ -160,7 +160,7 @@ async function startServer() {
 
           socket.user = user;
 
-          requestWithAuthToken(token, 'GET', `/user/chat/${user.id}`)
+           requestWithAuthToken(token, 'GET', `/user/chat/${user.id}`)
           .then(response => {
             console.log(response.data); // 서버에서 가져온 데이터 확인
             socket.token = token;
