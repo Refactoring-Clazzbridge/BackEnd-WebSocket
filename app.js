@@ -30,7 +30,7 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com:3000'],
     methods: ['GET', 'POST'],
     credentials: true,
   }
@@ -148,7 +148,7 @@ async function startServer() {
 
         // Redis에 새 채팅방 저장
         await redisClient.hset(`chat:${newChatId}`,
-            'sender', String(participants[1]), // 첫 번째 사용자를 sender로 설정
+          'sender', String(participants[1]), // 첫 번째 사용자를 sender로 설정
           'messages', `chat:${newChatId}:messages`,
           'participants', participants.join(','),
           'type', 'direct',
@@ -178,7 +178,7 @@ async function startServer() {
         // 모든 사용자 ID 가져오기 (필요에 따라 수정)
         const allUsers = await redisClient.smembers('users');
         const availableUsers = allUsers.filter(
-            (id) => !existingChatUserIds.includes(id) && id !== userId
+          (id) => !existingChatUserIds.includes(id) && id !== userId
         );
 
         callback({ success: true, availableUsers });

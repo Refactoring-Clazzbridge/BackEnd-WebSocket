@@ -28,8 +28,8 @@ app.use(cors({
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    // origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com:3000'], // 허용할 프론트엔드의 URL
-    origin: ['http://localhost:3000'], // 허용할 프론트엔드의 URL
+    origin: ['http://default-clazz-bridge-ser-99ad8-100126125-2a266ae4e49a.kr.lb.naverncp.com:3000'], // 허용할 프론트엔드의 URL
+    // origin: ['http://localhost:3000'], // 허용할 프론트엔드의 URL
     methods: ['GET', 'POST'],
     credentials: true,  // 쿠키 전송을 허용할지 여부
   }
@@ -161,13 +161,13 @@ async function startServer() {
 
           socket.user = user;
 
-           requestWithAuthToken(token, 'GET', `/user/chat/${user.id}`)
-          .then(response => {
-            console.log(response.data); // 서버에서 가져온 데이터 확인
-            socket.token = token;
-            socket.userName = response.data.name;
-            socket.avatarImageUrl = response.data.avatarImageUrl;
-            socket.userAccount = response.data.memberId;
+          requestWithAuthToken(token, 'GET', `/user/chat/${user.id}`)
+            .then(response => {
+              console.log(response.data); // 서버에서 가져온 데이터 확인
+              socket.token = token;
+              socket.userName = response.data.name;
+              socket.avatarImageUrl = response.data.avatarImageUrl;
+              socket.userAccount = response.data.memberId;
 
               console.log('a user connected, name : ', socket.userName);
               console.log('a user connected, id : ', socket.userAccount);
