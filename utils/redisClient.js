@@ -1,11 +1,12 @@
+require("dotenv").config();
 const { createClient } = require('redis');
 
-async function initializeRedis() {
-  const redisClient = createClient({
-    url: process.env.REDIS_URL,
-    legacyMode: true,
-  });
+const redisClient = createClient({
+  url: process.env.REDIS_URL,
+  legacyMode: true,
+});
 
+async function initializeRedis() {
   redisClient.on('error', (err) => {
     console.error('Redis connection error:', err);
   });
@@ -13,7 +14,7 @@ async function initializeRedis() {
   await redisClient.connect();
   console.log("Connected to Redis");
   await redisClient.select(1);
-  console.log("redis db 1 selected");
+  console.log("redis db selected");
 
   return redisClient;
 }
@@ -27,4 +28,4 @@ async function getUserInfoFromRedis(redisClient, userId) {
   });
 }
 
-module.exports = { initializeRedis, getUserInfoFromRedis };
+module.exports = { initializeRedis, getUserInfoFromRedis, redisClient };
