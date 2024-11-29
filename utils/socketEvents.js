@@ -247,8 +247,10 @@ function socketEventRegist(socket, io) {
   socket.on('fetchStudentData', async (courseId) => {
     try {
       const studentData = await getUsersByCourse(redisClient, courseId);
-      // console.log(studentData);
-      socket.emit('fetchedCourseStudentData', studentData);
+      console.log(studentData, "gigi");
+      socket.emit('fetchedStudentData', studentData);
+//      socket.emit('fetchedCourseStudentData', studentData);
+
     } catch (error) {
       console.error('Error fetching student data:', error);
     }
